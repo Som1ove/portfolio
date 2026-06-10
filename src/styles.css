@@ -1,0 +1,1793 @@
+:root {
+  color-scheme: light;
+  --red: #ff1b1c;
+  --red-deep: #c90512;
+  --black: #050505;
+  --ink: #16100a;
+  --yellow: #ffd51f;
+  --yellow-deep: #f0a800;
+  --cream: #fff6c9;
+  --green-screen: #8dad48;
+  --green-dark: #263411;
+  --console: #d9d1b4;
+  --console-shadow: #6b624c;
+  --panel-shadow: 10px 10px 0 var(--black);
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--red);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  color: var(--black);
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.12) 1px, transparent 1px),
+    radial-gradient(circle at center, rgba(255, 246, 201, 0.15) 1px, transparent 1px),
+    linear-gradient(135deg, var(--red) 0%, #ff3026 45%, var(--red-deep) 100%);
+  background-size: 100% 9px, 18px 18px, cover;
+}
+
+#root {
+  position: relative;
+  z-index: 2;
+  min-height: 100dvh;
+}
+
+body::before {
+  display: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+.app-shell {
+  position: relative;
+  z-index: 2;
+  min-height: 100dvh;
+  isolation: isolate;
+}
+
+.boot-fallback {
+  position: relative;
+  z-index: 2;
+  min-height: 100dvh;
+  padding: 96px clamp(16px, 5vw, 72px);
+}
+
+.boot-fallback p {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 9px 12px;
+  border: 3px solid var(--black);
+  background: var(--yellow);
+  box-shadow: 6px 6px 0 var(--black);
+  font-family: "Courier New", monospace;
+  font-size: clamp(0.78rem, 1.4vw, 1rem);
+  font-weight: 900;
+}
+
+.boot-fallback h1 {
+  max-width: 12ch;
+  margin: 0;
+  color: var(--black);
+  font-size: clamp(4.6rem, 15vw, 13.5rem);
+  line-height: 0.86;
+}
+
+.boot-error {
+  position: relative;
+  z-index: 20;
+  margin: 96px auto;
+  width: min(calc(100% - 32px), 960px);
+  border: 5px solid var(--black);
+  background: var(--yellow);
+  box-shadow: var(--panel-shadow);
+  padding: 24px;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+}
+
+.boot-error pre {
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px clamp(16px, 4vw, 48px);
+  pointer-events: none;
+}
+
+.brand-mark,
+.top-nav a,
+.footer-nav a,
+.placeholder-panel a {
+  border: 3px solid var(--black);
+  background: var(--yellow);
+  box-shadow: 5px 5px 0 var(--black);
+  color: var(--black);
+  pointer-events: auto;
+}
+
+.brand-mark {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  font-size: 1.2rem;
+}
+
+.top-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.top-nav a {
+  min-height: 44px;
+  padding: 11px 15px;
+  font-size: 0.88rem;
+}
+
+.top-nav a.active,
+.footer-nav a.active {
+  background: var(--black);
+  color: var(--yellow);
+}
+
+.home-page {
+  position: relative;
+  min-height: 100dvh;
+  padding: 96px clamp(16px, 5vw, 72px) 112px;
+  overflow: hidden;
+}
+
+.hero-title {
+  position: relative;
+  z-index: 4;
+  max-width: 1180px;
+}
+
+.hero-kicker {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 9px 12px;
+  border: 3px solid var(--black);
+  background: var(--yellow);
+  box-shadow: 6px 6px 0 var(--black);
+  font-family: "Courier New", monospace;
+  font-size: clamp(0.78rem, 1.4vw, 1rem);
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.hero-title h1 {
+  max-width: 12ch;
+  margin: 0;
+  color: var(--black);
+  font-size: clamp(4.6rem, 15vw, 13.5rem);
+  line-height: 0.86;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.retro-panel {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  gap: 4px;
+  min-width: 190px;
+  border: 4px solid var(--black);
+  background: var(--yellow);
+  box-shadow: var(--panel-shadow);
+  padding: 15px 16px;
+  transform: rotate(-2deg);
+}
+
+.retro-panel span {
+  font-family: "Courier New", monospace;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.retro-panel strong {
+  font-size: 1.24rem;
+  letter-spacing: 0;
+}
+
+.retro-panel small {
+  font-family: "Courier New", monospace;
+  font-size: 0.66rem;
+  font-weight: 900;
+}
+
+.insert-panel {
+  appearance: none;
+  z-index: 12;
+  color: var(--black);
+  font: inherit;
+  text-align: left;
+  cursor: default;
+}
+
+.insert-panel.is-ready {
+  cursor: pointer;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.26), transparent 36%),
+    var(--yellow);
+}
+
+.insert-panel.is-ready::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 13px;
+  height: 13px;
+  border: 3px solid var(--black);
+  border-radius: 999px;
+  background: #7dff4a;
+  box-shadow: 0 0 14px rgba(125, 255, 74, 0.9);
+}
+
+.insert-panel:disabled {
+  opacity: 1;
+}
+
+.panel-left {
+  left: clamp(16px, 5vw, 76px);
+  bottom: 188px;
+}
+
+.panel-right {
+  top: 134px;
+  right: clamp(16px, 5vw, 74px);
+  transform: rotate(2deg);
+}
+
+.interactive-zone {
+  position: relative;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: minmax(180px, 340px) minmax(260px, 520px);
+  align-items: end;
+  justify-content: center;
+  gap: clamp(18px, 4vw, 64px);
+  min-height: 455px;
+  margin-top: clamp(-20px, -2vw, 12px);
+}
+
+.cartridge-rack {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  align-self: center;
+  padding: 18px;
+}
+
+.cartridge {
+  position: relative;
+  width: min(100%, 270px);
+  aspect-ratio: 1 / 1.18;
+  cursor: grab;
+  user-select: none;
+  border: 0;
+  background: transparent;
+  filter: drop-shadow(9px 10px 0 rgba(0, 0, 0, 0.9));
+  touch-action: none;
+  overflow: visible;
+}
+
+.cartridge:active {
+  cursor: grabbing;
+}
+
+.cartridge.is-inserted {
+  pointer-events: none;
+}
+
+.cartridge:focus-visible,
+.gameboy-console:focus-visible,
+.insert-panel:focus-visible,
+.top-nav a:focus-visible,
+.footer-nav a:focus-visible,
+.brand-mark:focus-visible,
+.placeholder-panel a:focus-visible {
+  outline: 4px solid var(--cream);
+  outline-offset: 4px;
+}
+
+.cartridge-front {
+  position: absolute;
+  top: 2%;
+  left: 50%;
+  width: 66%;
+  aspect-ratio: 1 / 1.08;
+  border: 3px solid rgba(0, 0, 0, 0.42);
+  border-radius: 3px 3px 8px 8px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.22), transparent 18%, rgba(0, 0, 0, 0.13) 100%),
+    var(--shell-color);
+  box-shadow:
+    inset -8px -8px 0 rgba(0, 0, 0, 0.1),
+    inset 6px 8px 0 rgba(255, 255, 255, 0.14);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.shell-yellow {
+  --shell-color: #f3a51b;
+}
+
+.shell-green {
+  --shell-color: #26352f;
+}
+
+.shell-gray {
+  --shell-color: #a6a6a1;
+}
+
+.cartridge-ridges {
+  position: absolute;
+  top: 6%;
+  left: 0;
+  width: 20%;
+  height: 24%;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.22) 0 3px,
+    transparent 3px 7px
+  );
+}
+
+.cartridge-emboss {
+  position: absolute;
+  top: 8%;
+  left: 18%;
+  right: 14%;
+  min-height: 15%;
+  border: 2px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  color: rgba(0, 0, 0, 0.18);
+  display: grid;
+  place-items: center;
+  font-family: "Courier New", monospace;
+  font-size: clamp(0.48rem, 1.3vw, 0.72rem);
+  font-weight: 900;
+}
+
+.cartridge-art-frame {
+  position: absolute;
+  left: 15%;
+  right: 14%;
+  top: 31%;
+  height: 41%;
+  overflow: hidden;
+  border: 3px solid rgba(0, 0, 0, 0.32);
+  border-radius: 3px;
+  background: #d7d1bd;
+}
+
+.cartridge-art-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cartridge-arrow {
+  position: absolute;
+  left: 43%;
+  bottom: 9%;
+  width: 14%;
+  height: 9%;
+  border-left: 2px solid rgba(0, 0, 0, 0.16);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.16);
+  transform: rotate(-45deg);
+}
+
+.cartridge-badge {
+  position: absolute;
+  left: 50%;
+  bottom: 13%;
+  display: grid;
+  width: 72%;
+  min-width: 124px;
+  min-height: 48px;
+  border: 3px solid var(--black);
+  background: var(--yellow);
+  box-shadow: 5px 5px 0 var(--black);
+  padding: 7px 9px;
+  pointer-events: none;
+  transform: translateX(-50%) rotate(-2deg);
+}
+
+.cartridge-badge span,
+.cartridge-badge small {
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+}
+
+.cartridge-badge strong {
+  align-self: center;
+  font-size: clamp(0.92rem, 2vw, 1.2rem);
+  line-height: 0.95;
+}
+
+.cartridge-badge em {
+  font-family: "Courier New", monospace;
+  font-size: 0.58rem;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.console-stage {
+  perspective: 1100px;
+  perspective-origin: 50% 42%;
+}
+
+.model-console-stage {
+  position: relative;
+  top: -86px;
+  width: clamp(560px, 68vw, 980px);
+  align-self: end;
+}
+
+.gameboy-model {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.42 / 1;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  filter: drop-shadow(22px 24px 0 rgba(0, 0, 0, 0.92));
+  overflow: visible;
+}
+
+.gameboy-model::before {
+  content: none;
+}
+
+.gameboy-model.is-armed {
+  filter:
+    drop-shadow(22px 24px 0 rgba(0, 0, 0, 0.92))
+    brightness(1.08)
+    saturate(1.06);
+}
+
+.gameboy-model:active {
+  cursor: grabbing;
+}
+
+.gameboy-model canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.drop-target {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  pointer-events: none;
+}
+
+.boot-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.26) 2px, transparent 2px),
+    radial-gradient(circle at center, rgba(255, 213, 31, 0.16), transparent 46%),
+    var(--red);
+  background-size: 100% 10px, cover, cover;
+}
+
+.boot-transition::before,
+.boot-transition::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.boot-transition::before {
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 18px,
+    rgba(0, 0, 0, 0.96) 18px 22px
+  );
+  animation: boot-wipe 0.9s steps(8, end) forwards;
+}
+
+.boot-transition::after {
+  background: radial-gradient(circle at center, transparent 0 18%, rgba(0, 0, 0, 0.28) 70%);
+  mix-blend-mode: multiply;
+}
+
+.boot-card {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 6px;
+  min-width: min(86vw, 430px);
+  border: 5px solid var(--black);
+  background: var(--yellow);
+  box-shadow: 14px 14px 0 var(--black);
+  padding: clamp(20px, 5vw, 38px);
+  text-align: center;
+  transform: rotate(-2deg);
+}
+
+.boot-card span,
+.boot-card small {
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+}
+
+.boot-card strong {
+  font-size: clamp(3.2rem, 14vw, 8rem);
+  line-height: 0.85;
+}
+
+@keyframes boot-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.gameboy-console {
+  position: relative;
+  width: clamp(260px, 38vw, 430px);
+  aspect-ratio: 0.68 / 1;
+  cursor: grab;
+  border: 5px solid var(--black);
+  border-radius: 26px 26px 64px 26px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.25), transparent 18%, transparent 80%, rgba(0, 0, 0, 0.14)),
+    var(--console);
+  box-shadow:
+    22px 24px 0 var(--black),
+    inset -10px -12px 0 rgba(0, 0, 0, 0.13),
+    inset 8px 10px 0 rgba(255, 255, 255, 0.32);
+  transform-style: preserve-3d;
+  touch-action: none;
+}
+
+.gameboy-console:active {
+  cursor: grabbing;
+}
+
+.console-top-slot {
+  position: absolute;
+  top: 18px;
+  left: 34px;
+  right: 34px;
+  height: 20px;
+  border: 3px solid var(--black);
+  background: rgba(0, 0, 0, 0.12);
+  transform: translateZ(18px);
+}
+
+.console-screen-bezel {
+  position: absolute;
+  top: 58px;
+  left: 28px;
+  right: 28px;
+  padding: 15px;
+  border: 4px solid var(--black);
+  border-radius: 12px 12px 34px 12px;
+  background: #333237;
+  transform: translateZ(34px);
+}
+
+.screen-label-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 9px;
+  color: var(--cream);
+  font-family: "Courier New", monospace;
+  font-size: clamp(0.52rem, 1.3vw, 0.75rem);
+  font-weight: 900;
+}
+
+.console-screen {
+  display: grid;
+  min-height: clamp(115px, 17vw, 170px);
+  place-items: center;
+  border: 4px solid var(--black);
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.14) 1px, transparent 1px),
+    var(--green-screen);
+  background-size: 100% 8px;
+  color: var(--green-dark);
+  text-align: center;
+}
+
+.console-screen span {
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+}
+
+.console-screen strong {
+  display: block;
+  font-size: clamp(1.5rem, 5vw, 3.6rem);
+  line-height: 0.9;
+}
+
+.console-brand {
+  position: absolute;
+  top: 48%;
+  left: 34px;
+  font-family: "Courier New", monospace;
+  font-size: clamp(0.78rem, 1.8vw, 1rem);
+  font-weight: 900;
+  transform: translateZ(26px);
+}
+
+.console-controls {
+  position: absolute;
+  left: 34px;
+  right: 34px;
+  bottom: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transform: translateZ(42px);
+}
+
+.dpad {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.dpad span {
+  position: absolute;
+  inset: 34px 0;
+  border: 4px solid var(--black);
+  background: #171717;
+}
+
+.dpad span:last-child {
+  inset: 0 34px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 13px;
+  transform: rotate(-18deg);
+}
+
+.action-buttons span {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  border: 4px solid var(--black);
+  border-radius: 999px;
+  background: #e61c4d;
+  color: var(--cream);
+  box-shadow: inset -5px -6px 0 rgba(0, 0, 0, 0.22);
+}
+
+.system-buttons {
+  position: absolute;
+  left: 45%;
+  bottom: -64px;
+  display: flex;
+  gap: 12px;
+  transform: rotate(-12deg);
+}
+
+.system-buttons span {
+  display: block;
+  width: 44px;
+  height: 13px;
+  border: 3px solid var(--black);
+  border-radius: 999px;
+  background: var(--console-shadow);
+}
+
+.speaker {
+  position: absolute;
+  right: 35px;
+  bottom: 30px;
+  display: flex;
+  gap: 7px;
+  transform: rotate(-25deg) translateZ(28px);
+}
+
+.speaker span {
+  display: block;
+  width: 8px;
+  height: 54px;
+  border: 2px solid var(--black);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.footer-nav {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  z-index: 30;
+  display: flex;
+  width: min(calc(100% - 28px), 720px);
+  transform: translateX(-50%);
+  justify-content: center;
+  gap: 9px;
+  pointer-events: none;
+}
+
+.footer-nav a {
+  min-height: 44px;
+  padding: 11px 13px;
+  font-size: clamp(0.74rem, 2vw, 0.95rem);
+  text-align: center;
+}
+
+.placeholder-page {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: 112px 20px 104px;
+}
+
+.placeholder-panel {
+  display: grid;
+  width: min(100%, 720px);
+  gap: 18px;
+  border: 5px solid var(--black);
+  background: var(--yellow);
+  box-shadow: var(--panel-shadow);
+  padding: clamp(24px, 6vw, 52px);
+}
+
+.placeholder-panel p {
+  margin: 0;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+}
+
+.placeholder-panel h1 {
+  margin: 0;
+  font-size: clamp(3rem, 11vw, 7.6rem);
+  line-height: 0.9;
+  letter-spacing: 0;
+}
+
+.placeholder-panel span {
+  max-width: 46rem;
+  font-family: "Courier New", monospace;
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.6;
+}
+
+.placeholder-panel a {
+  justify-self: start;
+  min-height: 44px;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 840px) {
+  .site-header {
+    position: absolute;
+    align-items: flex-start;
+  }
+
+  .top-nav {
+    max-width: 214px;
+  }
+
+  .home-page {
+    padding-top: 108px;
+    padding-bottom: 142px;
+  }
+
+  .hero-title h1 {
+    max-width: 8ch;
+    font-size: clamp(4rem, 22vw, 8.8rem);
+  }
+
+  .panel-left,
+  .panel-right {
+    position: relative;
+    inset: auto;
+    width: min(100%, 330px);
+    margin-top: 18px;
+  }
+
+  .interactive-zone {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    min-height: auto;
+    margin-top: 26px;
+  }
+
+  .cartridge-rack {
+    grid-template-columns: repeat(3, minmax(86px, 1fr));
+    width: min(100%, 460px);
+    gap: 11px;
+    padding: 0;
+  }
+
+  .cartridge {
+    width: 100%;
+    box-shadow: 5px 5px 0 var(--black);
+    aspect-ratio: 1 / 1.18;
+  }
+
+  .cartridge-badge {
+    left: 50%;
+    bottom: 12%;
+    width: 82%;
+    min-width: 92px;
+    min-height: 42px;
+    padding: 6px;
+  }
+
+  .cartridge-front {
+    top: 0;
+    left: 50%;
+    width: 76%;
+  }
+
+  .cartridge-badge strong {
+    font-size: clamp(0.95rem, 4.8vw, 1.35rem);
+  }
+
+  .console-stage {
+    margin-top: 12px;
+  }
+
+  .model-console-stage {
+    top: -34px;
+    width: min(132vw, 680px);
+  }
+
+  .footer-nav {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .site-header {
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .brand-mark {
+    width: 50px;
+    height: 50px;
+  }
+
+  .top-nav a {
+    min-height: 40px;
+    padding: 9px 10px;
+    font-size: 0.72rem;
+  }
+
+  .hero-title h1 {
+    font-size: clamp(3.25rem, 21vw, 5.8rem);
+  }
+
+  .retro-panel {
+    min-width: 0;
+    box-shadow: 6px 6px 0 var(--black);
+  }
+
+  .gameboy-console {
+    width: min(82vw, 330px);
+    box-shadow:
+      12px 14px 0 var(--black),
+      inset -8px -10px 0 rgba(0, 0, 0, 0.13),
+      inset 6px 8px 0 rgba(255, 255, 255, 0.32);
+  }
+
+  .gameboy-model {
+    filter: drop-shadow(12px 14px 0 rgba(0, 0, 0, 0.92));
+  }
+
+  .console-controls {
+    left: 24px;
+    right: 24px;
+  }
+
+  .dpad {
+    width: 78px;
+    height: 78px;
+  }
+
+  .dpad span {
+    inset: 27px 0;
+  }
+
+  .dpad span:last-child {
+    inset: 0 27px;
+  }
+
+  .action-buttons span {
+    width: 47px;
+    height: 47px;
+  }
+
+  .speaker {
+    right: 25px;
+  }
+
+  .footer-nav a {
+    flex: 1 1 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Reference composition: poster-like grid, left type block, right console, bottom cartridges. */
+body {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.07) 1px, transparent 1px),
+    radial-gradient(circle at center, rgba(255, 246, 201, 0.12) 1px, transparent 1px),
+    linear-gradient(135deg, #ff1744 0%, #ff2641 48%, #f01833 100%);
+  background-size: 100% 10px, 116px 100%, 18px 18px, cover;
+}
+
+.site-header {
+  top: 22px;
+  left: 30px;
+  right: 30px;
+  z-index: 60;
+  display: grid;
+  grid-template-columns: 42px 1.45fr 1fr 72px 0.8fr 128px;
+  gap: 0;
+  align-items: stretch;
+  padding: 0;
+  border-top: 2px solid rgba(0, 0, 0, 0.55);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.55);
+  pointer-events: auto;
+}
+
+.brand-mark,
+.header-cell,
+.header-version {
+  min-height: 42px;
+  border: 0;
+  border-left: 2px solid rgba(0, 0, 0, 0.38);
+  background: transparent;
+  box-shadow: none;
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  border-left: 0;
+  background: var(--cream);
+}
+
+.brand-mark span {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 5px solid var(--black);
+  background: var(--cream);
+}
+
+.header-cell {
+  display: grid;
+  place-items: center;
+  padding: 0 16px;
+  color: rgba(0, 0, 0, 0.72);
+  font-family: "Courier New", monospace;
+  font-size: clamp(0.58rem, 0.72vw, 0.76rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.header-role {
+  justify-items: start;
+  text-align: left;
+}
+
+.header-version {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 5px 0 5px 14px;
+  border: 3px solid var(--yellow);
+  background: var(--cream);
+  color: var(--black);
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+}
+
+.header-version small,
+.header-version span {
+  font-size: 0.68rem;
+}
+
+.header-version strong {
+  font-size: 1.16rem;
+}
+
+.home-page {
+  min-height: 100dvh;
+  padding: 86px 30px 0;
+}
+
+.hero-title {
+  z-index: 18;
+  width: min(50vw, 760px);
+  max-width: none;
+}
+
+.hero-kicker {
+  margin: 0 0 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(0, 0, 0, 0.74);
+  font-size: clamp(0.62rem, 0.88vw, 0.82rem);
+  letter-spacing: 0.16em;
+}
+
+.hero-title h1 {
+  display: grid;
+  max-width: 9.2ch;
+  font-size: clamp(5.2rem, 8.9vw, 10.2rem);
+  line-height: 0.82;
+  letter-spacing: -0.075em;
+  text-transform: uppercase;
+}
+
+.hero-title h1 span {
+  display: block;
+}
+
+.hero-callout {
+  position: relative;
+  z-index: 19;
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 10px;
+  min-height: 64px;
+  border: 4px solid var(--black);
+  background: var(--cream);
+  box-shadow: 8px 8px 0 var(--black);
+  padding: 14px 20px;
+  font-size: clamp(1.1rem, 1.65vw, 1.65rem);
+  font-weight: 900;
+}
+
+.hero-callout span {
+  display: block;
+  width: 33px;
+  height: 33px;
+  background:
+    linear-gradient(var(--black), var(--black)) right top / 13px 13px no-repeat,
+    linear-gradient(var(--black), var(--black)) left bottom / 13px 13px no-repeat;
+}
+
+.hero-helper {
+  position: relative;
+  z-index: 18;
+  width: min(34vw, 430px);
+  margin: 22px 0 0;
+  color: rgba(40, 41, 122, 0.78);
+  font-family: "Courier New", monospace;
+  font-size: clamp(0.7rem, 0.86vw, 0.86rem);
+  font-weight: 900;
+  line-height: 1.28;
+  letter-spacing: 0.08em;
+}
+
+.retro-panel {
+  transform: none;
+}
+
+.panel-left {
+  left: 30px;
+  bottom: 91px;
+  width: min(31vw, 468px);
+  min-width: 360px;
+  min-height: 132px;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 18px;
+  border-width: 0;
+  border-left: 0;
+  background: var(--yellow);
+  box-shadow: 10px 10px 0 var(--black);
+  padding: 28px 28px;
+}
+
+.insert-panel span {
+  grid-column: 2;
+  font-size: clamp(1rem, 1.25vw, 1.35rem);
+  letter-spacing: 0.22em;
+}
+
+.insert-panel strong {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  font-size: clamp(2.5rem, 4vw, 4.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+
+.insert-panel small {
+  grid-column: 1 / -1;
+  color: var(--black);
+}
+
+.insert-panel::before {
+  content: ">";
+  grid-column: 3;
+  grid-row: 1;
+  font-family: "Courier New", monospace;
+  font-size: 1.7rem;
+  font-weight: 900;
+}
+
+.insert-panel.is-ready::after {
+  top: 22px;
+  right: 22px;
+}
+
+.interactive-zone {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: block;
+  min-height: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.interactive-zone > * {
+  pointer-events: auto;
+}
+
+.model-console-stage {
+  position: absolute;
+  top: 92px;
+  right: 5.3vw;
+  z-index: 12;
+  width: clamp(470px, 39vw, 650px);
+}
+
+.console-stage {
+  perspective: 1300px;
+  perspective-origin: 50% 46%;
+}
+
+.gameboy-model {
+  width: 100%;
+  height: clamp(540px, 76vh, 710px);
+  aspect-ratio: auto;
+  filter: none;
+}
+
+.gameboy-model.is-armed {
+  filter: brightness(1.08) saturate(1.06);
+}
+
+.gameboy-model::after {
+  content: "";
+  position: absolute;
+  left: 27%;
+  right: 13%;
+  bottom: 10%;
+  height: 70%;
+  z-index: -1;
+  border-radius: 22px 22px 68px 22px;
+  background: rgba(0, 0, 0, 0.92);
+  transform: translate(30px, 28px) rotate(1deg) skewX(-3deg);
+  transform-origin: center bottom;
+}
+
+.cartridge-rack {
+  position: absolute;
+  left: 34.3vw;
+  right: 5.6vw;
+  bottom: -30px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(165px, 245px));
+  justify-content: space-between;
+  align-items: end;
+  gap: clamp(22px, 4vw, 66px);
+  padding: 0;
+}
+
+.cartridge {
+  width: 100%;
+  max-width: 245px;
+  aspect-ratio: 1 / 0.9;
+  filter: drop-shadow(8px 8px 0 rgba(0, 0, 0, 0.92));
+  z-index: 8;
+}
+
+.cartridge-front {
+  top: -58%;
+  width: 64%;
+  aspect-ratio: 1 / 1.06;
+  opacity: 0.74;
+}
+
+.cartridge-badge {
+  bottom: 0;
+  width: 100%;
+  min-height: 78px;
+  border-width: 4px;
+  box-shadow: 8px 8px 0 var(--black);
+  padding: 16px 18px 10px;
+  transform: translateX(-50%) rotate(0);
+}
+
+.cartridge-1 .cartridge-badge {
+  background: #ffe12f;
+}
+
+.cartridge-2 .cartridge-badge {
+  background: #a981ff;
+}
+
+.cartridge-3 .cartridge-badge {
+  background: #ef82bf;
+}
+
+.cartridge-badge span {
+  display: none;
+}
+
+.cartridge-badge strong {
+  font-size: clamp(1rem, 1.35vw, 1.35rem);
+  line-height: 1;
+}
+
+.cartridge-badge em {
+  margin-top: 3px;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+}
+
+.cartridge-badge small {
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+}
+
+.footer-nav {
+  width: min(calc(100% - 40px), 760px);
+}
+
+.footer-card {
+  display: grid;
+  justify-items: start;
+  min-width: 188px;
+  gap: 2px;
+}
+
+.footer-card span,
+.footer-card small {
+  font-family: "Courier New", monospace;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.footer-card strong {
+  font-size: 1rem;
+}
+
+.footer-card-game-dev {
+  background: #ffe12f;
+}
+
+.footer-card-photo {
+  background: #a981ff;
+}
+
+.footer-card-illust {
+  background: #ef82bf;
+}
+
+@media (max-width: 1100px) {
+  .site-header {
+    grid-template-columns: 42px 1.25fr 1fr 54px 0.72fr 112px;
+    left: 18px;
+    right: 18px;
+  }
+
+  .header-cell {
+    padding: 0 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .home-page {
+    padding-inline: 18px;
+  }
+
+  .hero-title {
+    width: 54vw;
+  }
+
+  .hero-title h1 {
+    font-size: clamp(4.2rem, 8.8vw, 7rem);
+  }
+
+  .panel-left {
+    left: 18px;
+    min-width: 310px;
+    width: 34vw;
+  }
+
+  .model-console-stage {
+    right: 0;
+    width: clamp(420px, 45vw, 560px);
+  }
+
+  .cartridge-rack {
+    left: 37vw;
+    right: 18px;
+    grid-template-columns: repeat(3, minmax(130px, 200px));
+  }
+}
+
+@media (max-width: 840px) {
+  .site-header {
+    position: absolute;
+    grid-template-columns: 42px 1fr 96px;
+  }
+
+  .header-welcome,
+  .header-slash,
+  .header-portfolio {
+    display: none;
+  }
+
+  .header-role {
+    display: grid;
+  }
+
+  .header-version {
+    margin-left: 8px;
+  }
+
+  .home-page {
+    min-height: 1180px;
+    padding: 86px 14px 0;
+  }
+
+  .hero-title {
+    width: 100%;
+  }
+
+  .hero-title h1 {
+    max-width: 9ch;
+    font-size: clamp(3.4rem, 17vw, 6.2rem);
+  }
+
+  .hero-callout {
+    width: min(100%, 430px);
+    min-height: 58px;
+    font-size: 1.05rem;
+  }
+
+  .hero-helper {
+    width: min(100%, 390px);
+  }
+
+  .panel-left {
+    top: 372px;
+    bottom: auto;
+    left: 14px;
+    width: min(calc(100% - 28px), 430px);
+    min-width: 0;
+  }
+
+  .model-console-stage {
+    top: 460px;
+    right: 50%;
+    width: min(120vw, 620px);
+    transform: translateX(50%);
+  }
+
+  .gameboy-model {
+    height: 560px;
+  }
+
+  .cartridge-rack {
+    left: 14px;
+    right: 14px;
+    bottom: 26px;
+    grid-template-columns: repeat(3, minmax(92px, 1fr));
+    gap: 10px;
+  }
+
+  .cartridge {
+    max-width: none;
+  }
+
+  .cartridge-front {
+    top: -42%;
+    width: 68%;
+  }
+
+  .cartridge-badge {
+    min-width: 0;
+    min-height: 68px;
+    padding: 12px 10px 8px;
+  }
+}
+
+@media (max-width: 520px) {
+  .site-header {
+    top: 12px;
+    left: 10px;
+    right: 10px;
+    grid-template-columns: 38px 1fr;
+  }
+
+  .brand-mark {
+    width: 38px;
+    height: 38px;
+  }
+
+  .header-version {
+    display: none;
+  }
+
+  .header-cell {
+    min-height: 38px;
+    font-size: 0.54rem;
+  }
+
+  .home-page {
+    min-height: 1080px;
+    padding-top: 70px;
+  }
+
+  .hero-title h1 {
+    font-size: clamp(3rem, 18vw, 4.65rem);
+  }
+
+  .hero-callout {
+    padding: 12px;
+    box-shadow: 6px 6px 0 var(--black);
+  }
+
+  .panel-left {
+    top: 340px;
+    min-height: 106px;
+    padding: 20px 18px;
+  }
+
+  .insert-panel strong {
+    font-size: clamp(2rem, 12vw, 3.1rem);
+  }
+
+  .insert-panel span {
+    font-size: 0.82rem;
+  }
+
+  .model-console-stage {
+    top: 444px;
+    width: min(140vw, 560px);
+  }
+
+  .gameboy-model {
+    height: 500px;
+  }
+
+  .cartridge-rack {
+    bottom: 18px;
+  }
+
+  .cartridge-front {
+    display: none;
+  }
+
+  .cartridge-badge strong {
+    font-size: clamp(0.72rem, 3.8vw, 1rem);
+  }
+}
+
+/* Center cartridge column requested after the reference composition pass. */
+.cartridge-rack {
+  left: 50%;
+  right: auto;
+  top: 158px;
+  bottom: auto;
+  width: 230px;
+  z-index: 80;
+  grid-template-columns: 1fr;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  transform: translateX(-50%);
+}
+
+/* Extra render boundary for the rotatable 3D Game Boy, especially bottom/right turns. */
+.model-console-stage {
+  right: 13vw;
+  top: -24px;
+  width: clamp(500px, 40vw, 680px);
+}
+
+.gameboy-model {
+  height: clamp(600px, 82vh, 780px);
+}
+
+.gameboy-model canvas {
+  inset: auto;
+  top: -8%;
+  left: -12%;
+  width: 124%;
+  height: 124%;
+  filter: drop-shadow(22px 26px 0 rgba(0, 0, 0, 0.9));
+}
+
+.drop-target {
+  top: -8%;
+  right: -12%;
+  bottom: -16%;
+  left: -12%;
+}
+
+.gameboy-model::after {
+  content: none;
+}
+
+.cartridge {
+  width: 220px;
+  max-width: none;
+  aspect-ratio: 1 / 0.82;
+}
+
+.cartridge-front {
+  top: -38%;
+  width: 58%;
+}
+
+.cartridge-badge {
+  min-height: 70px;
+  padding: 13px 15px 9px;
+}
+
+.cartridge-1 {
+  transform-origin: center;
+}
+
+.cartridge-2 {
+  margin-left: 26px;
+}
+
+.cartridge-3 {
+  margin-left: -18px;
+}
+
+@media (max-width: 1100px) {
+  .cartridge-rack {
+    left: 53%;
+    top: 284px;
+    width: 184px;
+    gap: 16px;
+  }
+
+  .cartridge {
+    width: 184px;
+  }
+}
+
+@media (max-width: 840px) {
+  .cartridge-rack {
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: 28px;
+    width: min(78vw, 310px);
+    grid-template-columns: 1fr;
+    gap: 10px;
+    transform: translateX(-50%);
+  }
+
+  .cartridge {
+    width: min(78vw, 310px);
+    aspect-ratio: 1 / 0.48;
+  }
+
+  .cartridge-front {
+    top: -52%;
+    width: 34%;
+  }
+
+  .cartridge-2,
+  .cartridge-3 {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .cartridge-rack {
+    width: min(86vw, 290px);
+  }
+
+  .cartridge {
+    width: min(86vw, 290px);
+  }
+}
+
+/* Restore the earlier cartridge label style: yellow numbered tags with slight model overlap. */
+.cartridge {
+  width: 170px;
+  aspect-ratio: 1 / 1;
+  padding-top: 18px;
+  overflow: visible;
+}
+
+.cartridge::before {
+  content: "";
+  position: absolute;
+  inset: -18px -32px -18px;
+  z-index: 0;
+}
+
+.cartridge-front {
+  top: -5%;
+  width: 62%;
+  opacity: 0.94;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cartridge-badge,
+.cartridge-1 .cartridge-badge,
+.cartridge-2 .cartridge-badge,
+.cartridge-3 .cartridge-badge {
+  bottom: 4%;
+  width: 92%;
+  min-height: 74px;
+  gap: 0;
+  border-width: 4px;
+  background: var(--yellow);
+  box-shadow: 8px 8px 0 var(--black);
+  padding: 9px 12px 8px;
+  transform: translateX(-50%) rotate(-2deg);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cartridge-drag-handle {
+  position: absolute;
+  inset: -26px -52px -22px;
+  z-index: 5;
+  display: block;
+  cursor: grab;
+  background: transparent;
+  pointer-events: auto;
+}
+
+.cartridge:active .cartridge-drag-handle {
+  cursor: grabbing;
+}
+
+.cartridge-badge span {
+  display: block;
+  font-size: 0.88rem;
+  line-height: 0.95;
+  letter-spacing: 0.12em;
+}
+
+.cartridge-badge strong {
+  margin-top: 3px;
+  font-size: clamp(1.35rem, 1.75vw, 1.9rem);
+  line-height: 0.84;
+  letter-spacing: -0.04em;
+}
+
+.cartridge-badge em {
+  margin-top: 4px;
+  font-size: 0.62rem;
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+.cartridge-badge small {
+  font-size: 0.68rem;
+  line-height: 1;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 1100px) {
+  .cartridge {
+    width: 202px;
+  }
+
+  .cartridge-badge strong {
+    font-size: clamp(1.45rem, 2.5vw, 2rem);
+  }
+}
+
+@media (max-width: 840px) {
+  .cartridge {
+    width: min(78vw, 310px);
+    aspect-ratio: 1 / 0.76;
+  }
+
+  .cartridge-front {
+    top: -18%;
+    width: 42%;
+  }
+
+  .cartridge-badge,
+  .cartridge-1 .cartridge-badge,
+  .cartridge-2 .cartridge-badge,
+  .cartridge-3 .cartridge-badge {
+    min-height: 86px;
+  }
+}
+
+@media (max-width: 520px) {
+  .cartridge-front {
+    display: block;
+    top: -14%;
+    width: 40%;
+  }
+}
