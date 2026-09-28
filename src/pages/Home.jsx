@@ -53,23 +53,14 @@ export default function Home() {
   const navigate = useNavigate();
   const reduceMotion = useReducedMotion();
 
-  const sendCartridge = (cartridge, cartridgeRect) => {
+  const sendCartridge = (cartridge) => {
     setDropArmed(false);
+    setLoadedCartridge(cartridge);
+  };
 
-    const target = dropRef.current;
-
-    if (!target || !cartridgeRect) return;
-
-    const rect = target.getBoundingClientRect();
-    const overlapX = Math.max(0, Math.min(cartridgeRect.right, rect.right) - Math.max(cartridgeRect.left, rect.left));
-    const overlapY = Math.max(0, Math.min(cartridgeRect.bottom, rect.bottom) - Math.max(cartridgeRect.top, rect.top));
-    const overlapArea = overlapX * overlapY;
-    const cartridgeArea = cartridgeRect.width * cartridgeRect.height;
-    const isInside = overlapArea > cartridgeArea * 0.18;
-
-    if (isInside) {
-      setLoadedCartridge(cartridge);
-    }
+  const selectCartridge = (cartridge) => {
+    setDropArmed(false);
+    setLoadedCartridge(cartridge);
   };
 
   const startGame = () => {
@@ -108,7 +99,7 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.14, duration: 0.4 }}
       >
-        DRAG A 3D CARTRIDGE UP TO INSERT.<br />
+        DRAG OR CLICK A CARTRIDGE TO INSERT.<br />
         PRESS START TO LOAD A PORTFOLIO WORLD.
       </motion.p>
 
@@ -141,6 +132,7 @@ export default function Home() {
               onDrop={sendCartridge}
               onDragStart={() => setDropArmed(true)}
               onDragCancel={() => setDropArmed(false)}
+              onActivate={selectCartridge}
             />
           ))}
         </div>

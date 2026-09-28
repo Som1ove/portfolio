@@ -318,6 +318,7 @@ a {
 
 .cartridge:focus-visible,
 .gameboy-console:focus-visible,
+.gameboy-model:focus-visible,
 .insert-panel:focus-visible,
 .top-nav a:focus-visible,
 .footer-nav a:focus-visible,
@@ -1745,13 +1746,6 @@ body {
   overflow: visible;
 }
 
-.cartridge::before {
-  content: "";
-  position: absolute;
-  inset: -18px -32px -18px;
-  z-index: 0;
-}
-
 .cartridge-front {
   top: -5%;
   width: 62%;
@@ -1775,20 +1769,6 @@ body {
   transform: translateX(-50%) rotate(-2deg);
   z-index: 2;
   pointer-events: none;
-}
-
-.cartridge-drag-handle {
-  position: absolute;
-  inset: -34px -74px -28px;
-  z-index: 5;
-  display: block;
-  cursor: grab;
-  background: transparent;
-  pointer-events: auto;
-}
-
-.cartridge:active .cartridge-drag-handle {
-  cursor: grabbing;
 }
 
 .cartridge-badge span {

@@ -403,16 +403,17 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
     const animate = () => {
       frameId = window.requestAnimationFrame(animate);
 
-      if (groupRef.current && !reduceMotion) {
+      if (groupRef.current) {
+        const rotationEase = reduceMotion ? 1 : 0.1;
         groupRef.current.rotation.x = THREE.MathUtils.lerp(
           groupRef.current.rotation.x,
           targetRotationRef.current.x,
-          0.1,
+          rotationEase,
         );
         groupRef.current.rotation.y = THREE.MathUtils.lerp(
           groupRef.current.rotation.y,
           targetRotationRef.current.y,
-          0.1,
+          rotationEase,
         );
       }
 
@@ -496,9 +497,7 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
   }, [cartridge, reduceMotion]);
 
   const startRotation = (event) => {
-    if (reduceMotion) return;
-
-    event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
     originRef.current = {
       x: event.clientX,
       y: event.clientY,
@@ -509,7 +508,7 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
   };
 
   const moveRotation = (event) => {
-    if (!dragging || reduceMotion) return;
+    if (!dragging) return;
 
     const dx = event.clientX - originRef.current.x;
     const dy = event.clientY - originRef.current.y;
@@ -521,15 +520,30 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
   };
 
   const stopRotation = (event) => {
-    if (!reduceMotion) {
-      targetRotationRef.current = { ...HOME_ROTATION };
-    }
+    targetRotationRef.current = { ...HOME_ROTATION };
 
     if (event?.currentTarget?.hasPointerCapture?.(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
 
     setDragging(false);
+  };
+
+  const rotateWithKeyboard = (event) => {
+    const nextRotation = { ...targetRotationRef.current };
+
+    if (event.key === 'ArrowLeft') nextRotation.y -= 0.18;
+    else if (event.key === 'ArrowRight') nextRotation.y += 0.18;
+    else if (event.key === 'ArrowUp') nextRotation.x -= 0.14;
+    else if (event.key === 'ArrowDown') nextRotation.x += 0.14;
+    else if (event.key === 'Home') Object.assign(nextRotation, HOME_ROTATION);
+    else return;
+
+    event.preventDefault();
+    targetRotationRef.current = {
+      x: Math.max(-0.95, Math.min(0.75, nextRotation.x)),
+      y: Math.max(-3.35, Math.min(3.35, nextRotation.y)),
+    };
   };
 
   return (
@@ -541,13 +555,15 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
     >
       <div
         className={`gameboy-model${isArmed ? ' is-armed' : ''}`}
-        role="img"
-        aria-label="Rotatable classic Game Boy 3D model"
+        role="group"
+        aria-label="Rotatable classic Game Boy 3D model. Drag it or use the arrow keys to rotate."
         tabIndex={0}
         onPointerDown={startRotation}
         onPointerMove={moveRotation}
         onPointerUp={stopRotation}
         onPointerCancel={stopRotation}
+        onLostPointerCapture={stopRotation}
+        onKeyDown={rotateWithKeyboard}
         ref={mountRef}
       >
         <div className="drop-target" ref={dropRef}>
