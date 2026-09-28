@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useDragControls, useReducedMotion } from 'framer-motion';
 import { useRef } from 'react';
 
 export default function DraggableCartridge({
@@ -11,13 +11,21 @@ export default function DraggableCartridge({
   onDragCancel,
 }) {
   const reduceMotion = useReducedMotion();
+  const dragControls = useDragControls();
   const cartridgeRef = useRef(null);
+  const startDrag = (event) => {
+    if (reduceMotion || isInserted) return;
+
+    dragControls.start(event);
+  };
 
   return (
     <motion.article
       ref={cartridgeRef}
       className={`cartridge cartridge-${index + 1}${isInserted ? ' is-inserted' : ''}`}
       drag={!reduceMotion && !isInserted}
+      dragControls={dragControls}
+      dragListener={false}
       dragConstraints={constraintsRef}
       dragElastic={0.18}
       dragMomentum={false}
@@ -53,7 +61,7 @@ export default function DraggableCartridge({
         <em>{cartridge.game}</em>
         <small>{cartridge.year}</small>
       </div>
-      <span className="cartridge-drag-handle" aria-hidden="true" />
+      <span className="cartridge-drag-handle" aria-hidden="true" onPointerDown={startDrag} />
     </motion.article>
   );
 }
