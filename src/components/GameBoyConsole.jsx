@@ -226,6 +226,7 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
   const screenCanvasRef = useRef(null);
   const screenTextureRef = useRef(null);
   const screenAnimationFrameRef = useRef(null);
+  const renderRequestedRef = useRef(true);
   const insertedSlotMaterialRef = useRef(null);
   const insertedModelPartsRef = useRef([]);
   const originRef = useRef({ x: 0, y: 0, rotateX: HOME_ROTATION.x, rotateY: HOME_ROTATION.y });
@@ -239,6 +240,7 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
     if (insertedSlotMaterialRef.current) {
       insertedSlotMaterialRef.current.color.setHex(INSERTED_SHELL_COLORS[cartridge?.shell] ?? 0x161616);
     }
+    renderRequestedRef.current = true;
   }, [cartridge]);
 
   useEffect(() => {
@@ -305,7 +307,14 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
       mount.classList.add('is-fallback');
     };
     const loadColorTexture = (fileName) => {
-      const texture = textureLoader.load(`${TEXTURE_ROOT}${fileName}`, undefined, undefined, useFallback);
+      const texture = textureLoader.load(
+        `${TEXTURE_ROOT}${fileName}`,
+        () => {
+          renderRequestedRef.current = true;
+        },
+        undefined,
+        useFallback,
+      );
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.flipY = true;
       return texture;
@@ -386,6 +395,7 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
       model.rotation.set(MODEL_FACE_ROTATION.x, MODEL_FACE_ROTATION.y, MODEL_FACE_ROTATION.z);
 
       group.add(model);
+      renderRequestedRef.current = true;
     }, undefined, useFallback);
 
     const resize = () => {
@@ -393,6 +403,7 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
       renderer.setSize(rect.width, rect.height, false);
       camera.aspect = rect.width / rect.height || 1;
       camera.updateProjectionMatrix();
+      renderRequestedRef.current = true;
     };
 
     const resizeObserver = new ResizeObserver(resize);
@@ -402,9 +413,12 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
     let frameId = 0;
     const animate = () => {
       frameId = window.requestAnimationFrame(animate);
+      let shouldRender = renderRequestedRef.current;
 
       if (groupRef.current) {
         const rotationEase = reduceMotion ? 1 : 0.1;
+        const previousX = groupRef.current.rotation.x;
+        const previousY = groupRef.current.rotation.y;
         groupRef.current.rotation.x = THREE.MathUtils.lerp(
           groupRef.current.rotation.x,
           targetRotationRef.current.x,
@@ -415,26 +429,37 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
           targetRotationRef.current.y,
           rotationEase,
         );
+        shouldRender = shouldRender
+          || Math.abs(previousX - groupRef.current.rotation.x) > 0.0001
+          || Math.abs(previousY - groupRef.current.rotation.y) > 0.0001;
       }
 
       if (insertedSlotMaterialRef.current) {
         const targetOpacity = activeCartridgeRef.current ? 1 : 0;
+        const previousOpacity = insertedSlotMaterialRef.current.opacity;
         insertedSlotMaterialRef.current.opacity = THREE.MathUtils.lerp(
           insertedSlotMaterialRef.current.opacity,
           targetOpacity,
           reduceMotion ? 1 : 0.18,
         );
+        shouldRender = shouldRender
+          || Math.abs(previousOpacity - insertedSlotMaterialRef.current.opacity) > 0.001;
       }
 
       insertedModelPartsRef.current.forEach((mesh) => {
-        mesh.visible = Boolean(activeCartridgeRef.current);
+        const shouldBeVisible = Boolean(activeCartridgeRef.current);
+        if (mesh.visible !== shouldBeVisible) shouldRender = true;
+        mesh.visible = shouldBeVisible;
 
         if (mesh.material?.opacity !== undefined) {
           mesh.material.opacity = insertedSlotMaterialRef.current?.opacity ?? 1;
         }
       });
 
-      renderer.render(scene, camera);
+      if (shouldRender) {
+        renderer.render(scene, camera);
+        renderRequestedRef.current = false;
+      }
     };
 
     animate();
@@ -471,6 +496,7 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
     if (reduceMotion) {
       drawScreenTexture(screenCanvasRef.current, cartridge);
       screenTextureRef.current.needsUpdate = true;
+      renderRequestedRef.current = true;
       return undefined;
     }
 
@@ -481,6 +507,7 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
       const progress = Math.min((now - startTime) / duration, 1);
       drawScreenTexture(screenCanvasRef.current, cartridge, progress);
       screenTextureRef.current.needsUpdate = true;
+      renderRequestedRef.current = true;
 
       if (progress < 1) {
         screenAnimationFrameRef.current = window.requestAnimationFrame(tick);

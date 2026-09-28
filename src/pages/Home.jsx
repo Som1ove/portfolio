@@ -47,20 +47,42 @@ export default function Home() {
   const sceneRef = useRef(null);
   const dropRef = useRef(null);
   const startTimerRef = useRef(null);
+  const insertionLockRef = useRef(false);
   const [dropArmed, setDropArmed] = useState(false);
   const [loadedCartridge, setLoadedCartridge] = useState(null);
+  const [insertion, setInsertion] = useState(null);
   const [isStarting, setIsStarting] = useState(false);
   const navigate = useNavigate();
   const reduceMotion = useReducedMotion();
 
-  const sendCartridge = (cartridge) => {
+  const insertCartridge = (cartridge, sourceRect) => {
+    if (insertionLockRef.current || !sourceRect || !dropRef.current) return;
+
+    const targetRect = dropRef.current.getBoundingClientRect();
+    insertionLockRef.current = true;
     setDropArmed(false);
-    setLoadedCartridge(cartridge);
+    setInsertion({
+      cartridge,
+      source: {
+        left: sourceRect.left,
+        top: sourceRect.top,
+        width: sourceRect.width,
+        height: sourceRect.height,
+      },
+      target: {
+        left: targetRect.left,
+        top: targetRect.top,
+        width: targetRect.width,
+        height: targetRect.height,
+      },
+      key: `${cartridge.id}-${window.performance.now()}`,
+    });
   };
 
-  const selectCartridge = (cartridge) => {
-    setDropArmed(false);
+  const completeInsertion = (cartridge) => {
     setLoadedCartridge(cartridge);
+    setInsertion(null);
+    insertionLockRef.current = false;
   };
 
   const startGame = () => {
@@ -104,19 +126,28 @@ export default function Home() {
       </motion.p>
 
       <motion.button
-        className={`retro-panel panel-left insert-panel${loadedCartridge ? ' is-ready' : ''}`}
+        className={`retro-panel panel-left insert-panel${loadedCartridge && !insertion ? ' is-ready' : ''}${insertion ? ' is-inserting' : ''}`}
         type="button"
-        disabled={!loadedCartridge || isStarting}
+        disabled={!loadedCartridge || Boolean(insertion) || isStarting}
         onClick={startGame}
         initial={reduceMotion ? false : { opacity: 0, x: -28 }}
         animate={{ opacity: 1, x: 0 }}
         whileTap={loadedCartridge && !isStarting ? { scale: 0.97 } : undefined}
         transition={{ delay: 0.16, duration: 0.45 }}
-        aria-label={loadedCartridge ? `Start ${loadedCartridge.title}` : 'Drag a cartridge into the Game Boy'}
+        aria-label={insertion
+          ? `Inserting ${insertion.cartridge.title}`
+          : loadedCartridge
+            ? `Start ${loadedCartridge.title}`
+            : 'Drag a cartridge into the Game Boy'}
+        aria-live="polite"
       >
-        <span>{loadedCartridge ? 'START' : 'INSERT'}</span>
-        <strong>{loadedCartridge ? 'START GAME' : 'SELECT CART'}</strong>
-        <small>{loadedCartridge ? `${loadedCartridge.game} READY` : 'DROP CART INTO GAME BOY'}</small>
+        <span>{insertion ? 'INSERTING' : loadedCartridge ? 'START' : 'INSERT'}</span>
+        <strong>{insertion ? 'LOADING CART' : loadedCartridge ? 'START GAME' : 'SELECT CART'}</strong>
+        <small>{insertion
+          ? `${insertion.cartridge.game} → GAME BOY`
+          : loadedCartridge
+            ? `${loadedCartridge.game} READY`
+            : 'DROP CART INTO GAME BOY'}</small>
       </motion.button>
 
       <div className="interactive-zone">
@@ -128,15 +159,75 @@ export default function Home() {
               cartridge={cartridge}
               constraintsRef={sceneRef}
               index={index}
-              isInserted={loadedCartridge?.id === cartridge.id}
-              onDrop={sendCartridge}
+              isInserted={loadedCartridge?.id === cartridge.id || insertion?.cartridge.id === cartridge.id}
+              onDrop={insertCartridge}
               onDragStart={() => setDropArmed(true)}
               onDragCancel={() => setDropArmed(false)}
-              onActivate={selectCartridge}
+              onActivate={insertCartridge}
             />
           ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {insertion ? (
+          <motion.div
+            key={insertion.key}
+            className="insertion-cartridge"
+            style={{
+              width: insertion.source.width,
+              height: insertion.source.height,
+            }}
+            initial={{
+              x: insertion.source.left,
+              y: insertion.source.top,
+              rotate: insertion.cartridge.rotation,
+              scale: 1,
+              opacity: 1,
+            }}
+            animate={reduceMotion
+              ? {
+                  x: insertion.target.left + insertion.target.width / 2 - insertion.source.width / 2,
+                  y: insertion.target.top,
+                  scale: 0.62,
+                  opacity: 0,
+                }
+              : {
+                  x: [
+                    insertion.source.left,
+                    insertion.target.left + insertion.target.width / 2 - insertion.source.width / 2,
+                    insertion.target.left + insertion.target.width / 2 - insertion.source.width / 2,
+                  ],
+                  y: [
+                    insertion.source.top,
+                    insertion.target.top - insertion.source.height * 0.62,
+                    insertion.target.top + insertion.target.height * 0.34,
+                  ],
+                  rotate: [insertion.cartridge.rotation, 0, 0],
+                  scale: [1, 0.72, 0.56],
+                  opacity: [1, 1, 0],
+                }}
+            transition={reduceMotion
+              ? { duration: 0.16, ease: 'easeOut' }
+              : {
+                  duration: 0.58,
+                  times: [0, 0.68, 1],
+                  ease: [[0.22, 1, 0.36, 1], [0.4, 0, 1, 1]],
+                }}
+            onAnimationComplete={() => completeInsertion(insertion.cartridge)}
+            aria-hidden="true"
+          >
+            <div className={`cartridge-front shell-${insertion.cartridge.shell}`}>
+              <div className="cartridge-ridges" />
+              <div className="cartridge-emboss">Nintendo GAME BOY</div>
+              <div className="cartridge-art-frame">
+                <img src={insertion.cartridge.labelImage} alt="" draggable="false" />
+              </div>
+              <div className="cartridge-arrow" />
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
       <AnimatePresence>
         {isStarting && loadedCartridge ? (

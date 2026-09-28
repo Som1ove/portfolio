@@ -310,6 +310,7 @@ a {
 
 .cartridge:active {
   cursor: grabbing;
+  will-change: transform;
 }
 
 .cartridge.is-inserted {
@@ -1233,6 +1234,14 @@ body {
   filter: brightness(1.08) saturate(1.06);
 }
 
+.gameboy-model.is-armed .drop-target {
+  border-color: rgba(255, 213, 31, 0.9);
+  background: rgba(255, 213, 31, 0.2);
+  box-shadow: 0 0 0 5px rgba(255, 213, 31, 0.13);
+  color: var(--cream);
+  opacity: 1;
+}
+
 .gameboy-model::after {
   content: "";
   position: absolute;
@@ -1649,10 +1658,22 @@ body {
 }
 
 .drop-target {
-  top: -8%;
-  right: -12%;
-  bottom: -16%;
-  left: -12%;
+  top: 15%;
+  right: auto;
+  bottom: auto;
+  left: 43%;
+  width: 16%;
+  height: 8%;
+  display: grid;
+  place-items: center;
+  border: 2px dashed transparent;
+  border-radius: 6px;
+  font-family: "Courier New", monospace;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transition: opacity 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 
 .gameboy-model::after {
@@ -1663,6 +1684,30 @@ body {
   width: 220px;
   max-width: none;
   aspect-ratio: 1 / 0.82;
+}
+
+.insertion-cartridge {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 120;
+  pointer-events: none;
+  filter: drop-shadow(10px 12px 0 rgba(0, 0, 0, 0.72));
+  transform-origin: center bottom;
+  will-change: transform, opacity;
+}
+
+.insertion-cartridge .cartridge-front {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  transform: none;
+}
+
+.insert-panel.is-inserting {
+  box-shadow: 10px 10px 0 var(--black), inset 0 -7px 0 rgba(255, 255, 255, 0.22);
 }
 
 .cartridge-front {

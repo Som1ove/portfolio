@@ -14,8 +14,13 @@ export default function DraggableCartridge({
   const reduceMotion = useReducedMotion();
   const cartridgeRef = useRef(null);
   const pointerStartRef = useRef(null);
+  const getShellRect = () => (
+    cartridgeRef.current?.querySelector('.cartridge-front')?.getBoundingClientRect()
+    ?? cartridgeRef.current?.getBoundingClientRect()
+    ?? null
+  );
   const activateCartridge = () => {
-    if (!isInserted) onActivate?.(cartridge);
+    if (!isInserted) onActivate?.(cartridge, getShellRect());
   };
   const handleKeyDown = (event) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
@@ -23,7 +28,7 @@ export default function DraggableCartridge({
     event.preventDefault();
     activateCartridge();
   };
-  const finishDrag = () => onDrop?.(cartridge);
+  const finishDrag = () => onDrop?.(cartridge, getShellRect());
   const rememberPointerStart = (event) => {
     pointerStartRef.current = { x: event.clientX, y: event.clientY };
   };
@@ -33,7 +38,7 @@ export default function DraggableCartridge({
     if (!start || isInserted) return;
 
     if (Math.hypot(event.clientX - start.x, event.clientY - start.y) >= 6) {
-      onDrop?.(cartridge);
+      onDrop?.(cartridge, getShellRect());
     }
   };
   const cancelPointerGesture = () => {
@@ -47,12 +52,18 @@ export default function DraggableCartridge({
       className={`cartridge cartridge-${index + 1}${isInserted ? ' is-inserted' : ''}`}
       drag={!isInserted}
       dragConstraints={constraintsRef}
-      dragElastic={0.18}
+      dragElastic={0.32}
       dragMomentum={false}
       dragSnapToOrigin
+      dragTransition={{ bounceStiffness: 260, bounceDamping: 24 }}
       whileDrag={reduceMotion
         ? { zIndex: 80 }
-        : { scale: 1.06, rotate: index % 2 === 0 ? -3 : 3, zIndex: 80 }}
+        : {
+            scale: 1.035,
+            rotate: index % 2 === 0 ? -1.5 : 1.5,
+            zIndex: 80,
+            transition: { type: 'spring', stiffness: 420, damping: 30, mass: 0.55 },
+          }}
       whileHover={reduceMotion || isInserted ? undefined : { y: -6 }}
       initial={reduceMotion ? false : { opacity: 0, y: 32, rotate: cartridge.rotation }}
       animate={{
@@ -63,7 +74,9 @@ export default function DraggableCartridge({
       }}
       transition={reduceMotion
         ? { duration: 0 }
-        : { delay: isInserted ? 0 : 0.24 + index * 0.08, type: 'spring', stiffness: 130, damping: 15 }}
+        : isInserted
+          ? { duration: 0.16, ease: [0.4, 0, 1, 1] }
+          : { delay: 0.24 + index * 0.08, type: 'spring', stiffness: 180, damping: 20 }}
       onDragStart={onDragStart}
       onDragEnd={finishDrag}
       onPointerDownCapture={rememberPointerStart}
