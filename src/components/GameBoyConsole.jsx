@@ -250,8 +250,17 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
     const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
     camera.position.set(0, 0.55, 6.15);
 
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    let renderer;
+
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    } catch (error) {
+      console.warn('WebGL is unavailable; using the lightweight Game Boy fallback.', error);
+      mount.classList.add('is-fallback');
+      return () => mount.classList.remove('is-fallback');
+    }
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     const group = new THREE.Group();
@@ -291,41 +300,28 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
     scene.add(rimLight);
 
     const textureLoader = new THREE.TextureLoader();
+    const useFallback = (error) => {
+      console.warn('Game Boy assets failed to load; using the lightweight fallback.', error);
+      mount.classList.add('is-fallback');
+    };
     const loadColorTexture = (fileName) => {
-      const texture = textureLoader.load(`${TEXTURE_ROOT}${fileName}`);
+      const texture = textureLoader.load(`${TEXTURE_ROOT}${fileName}`, undefined, undefined, useFallback);
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.flipY = true;
       return texture;
     };
-    const loadDataTexture = (fileName) => {
-      const texture = textureLoader.load(`${TEXTURE_ROOT}${fileName}`);
-      texture.flipY = true;
-      return texture;
-    };
 
-    const mainAlbedo = loadColorTexture('Gameboy_Low_Poly_5_Main_BaseColor_Kirby.png');
-    const mainNormal = loadDataTexture('Gameboy_Low_Poly_5_Main_Normal.png');
-    const mainRoughness = loadDataTexture('Gameboy_Low_Poly_5_Main_Roughness.png');
-    const mainMetallic = loadDataTexture('Gameboy_Low_Poly_5_Main_Metallic.png');
-    const externalAlbedo = loadColorTexture('Gameboy_Low_Poly_5_External_BaseColor.png');
-    const externalNormal = loadDataTexture('Gameboy_Low_Poly_5_External_Normal.png');
-    const externalRoughness = loadDataTexture('Gameboy_Low_Poly_5_External_Roughness.png');
-    const externalMetallic = loadDataTexture('Gameboy_Low_Poly_5_External_Metallic.png');
+    const mainAlbedo = loadColorTexture('main.webp');
+    const externalAlbedo = loadColorTexture('external.webp');
 
     const mainMaterial = new THREE.MeshStandardMaterial({
       map: mainAlbedo,
-      normalMap: mainNormal,
-      roughnessMap: mainRoughness,
-      metalnessMap: mainMetallic,
       roughness: 0.82,
       metalness: 0.08,
     });
 
     const externalMaterial = new THREE.MeshStandardMaterial({
       map: externalAlbedo,
-      normalMap: externalNormal,
-      roughnessMap: externalRoughness,
-      metalnessMap: externalMetallic,
       roughness: 0.78,
       metalness: 0.08,
     });
@@ -390,9 +386,7 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
       model.rotation.set(MODEL_FACE_ROTATION.x, MODEL_FACE_ROTATION.y, MODEL_FACE_ROTATION.z);
 
       group.add(model);
-    }, undefined, (error) => {
-      console.error('Game Boy model failed to load', error);
-    });
+    }, undefined, useFallback);
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -453,13 +447,7 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
       insertedChipMaterial.dispose();
       [
         mainAlbedo,
-        mainNormal,
-        mainRoughness,
-        mainMetallic,
         externalAlbedo,
-        externalNormal,
-        externalRoughness,
-        externalMetallic,
       ].forEach((texture) => texture.dispose());
       if (screenAnimationFrameRef.current) {
         window.cancelAnimationFrame(screenAnimationFrameRef.current);
@@ -468,6 +456,7 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
       screenTexture.dispose();
       renderer.dispose();
       group.clear();
+      mount.classList.remove('is-fallback');
     };
   }, [reduceMotion]);
 
@@ -563,6 +552,17 @@ export default function GameBoyConsole({ dropRef, isArmed = false, cartridge = n
       >
         <div className="drop-target" ref={dropRef}>
           DROP CART
+        </div>
+        <div className="gameboy-fallback" aria-hidden="true">
+          <div className="gameboy-fallback-screen">
+            <span>SOM1OVE</span>
+            <strong>GAME WORLD</strong>
+          </div>
+          <div className="gameboy-fallback-controls">
+            <span>+</span>
+            <span>A&nbsp;&nbsp;B</span>
+          </div>
+          <small>LIGHTWEIGHT MODE</small>
         </div>
         <canvas ref={canvasRef} />
       </div>

@@ -1587,6 +1587,66 @@ body {
   filter: drop-shadow(22px 26px 0 rgba(0, 0, 0, 0.9));
 }
 
+.gameboy-fallback {
+  position: absolute;
+  top: 10%;
+  left: 17%;
+  display: none;
+  width: 66%;
+  height: 78%;
+  border: 5px solid var(--black);
+  border-radius: 26px 26px 70px 26px;
+  background: var(--console);
+  box-shadow: 22px 26px 0 rgba(0, 0, 0, 0.9);
+  color: var(--black);
+  padding: 16% 10% 9%;
+}
+
+.gameboy-model.is-fallback .gameboy-fallback {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.gameboy-model.is-fallback canvas {
+  display: none;
+}
+
+.gameboy-fallback-screen {
+  display: grid;
+  place-content: center;
+  min-height: 44%;
+  border: 10px solid #353046;
+  border-radius: 15px 15px 34px 15px;
+  background: #9dad64;
+  font-family: "Courier New", monospace;
+  text-align: center;
+}
+
+.gameboy-fallback-screen span,
+.gameboy-fallback small {
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.gameboy-fallback-screen strong {
+  font-size: clamp(1rem, 2.8vw, 2rem);
+}
+
+.gameboy-fallback-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "Courier New", monospace;
+  font-size: clamp(1.4rem, 4vw, 2.8rem);
+  font-weight: 900;
+}
+
+.gameboy-fallback small {
+  text-align: center;
+}
+
 .drop-target {
   top: -8%;
   right: -12%;

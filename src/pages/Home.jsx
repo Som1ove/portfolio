@@ -16,8 +16,7 @@ const cartridges = [
     year: 'LEVELS',
     route: '/game-dev',
     rotation: -8,
-    texture: `${ASSET_ROOT}/cartridges/textures/Gameroom_Scene_Export_v2_GBA_Pokemon_MTL_B.png`,
-    labelImage: `${ASSET_ROOT}/cartridges/labels/pokemon.png`,
+    labelImage: `${ASSET_ROOT}/cartridges/labels/pokemon.webp`,
     shell: 'yellow',
   },
   {
@@ -28,8 +27,7 @@ const cartridges = [
     year: 'NEON',
     route: '/photography',
     rotation: 6,
-    texture: `${ASSET_ROOT}/cartridges/textures/Gameroom_Scene_Export_v2_GBA_Zelda_MTL_Bas.png`,
-    labelImage: `${ASSET_ROOT}/cartridges/labels/zelda.png`,
+    labelImage: `${ASSET_ROOT}/cartridges/labels/zelda.webp`,
     shell: 'green',
   },
   {
@@ -40,8 +38,7 @@ const cartridges = [
     year: 'POSTER',
     route: '/illustration',
     rotation: -2,
-    texture: `${ASSET_ROOT}/cartridges/textures/Gameroom_Scene_Export_v2_GBA_Kirby_MTL_Bas.png`,
-    labelImage: `${ASSET_ROOT}/cartridges/labels/kirby.png`,
+    labelImage: `${ASSET_ROOT}/cartridges/labels/kirby.webp`,
     shell: 'gray',
   },
 ];
