@@ -5,6 +5,8 @@ import DraggableCartridge from '../components/DraggableCartridge.jsx';
 import GameBoyConsole from '../components/GameBoyConsole.jsx';
 import HeroTitle from '../components/HeroTitle.jsx';
 
+const ASSET_ROOT = `${import.meta.env.BASE_URL}assets`;
+
 const cartridges = [
   {
     id: 'pokemon',
@@ -14,8 +16,8 @@ const cartridges = [
     year: 'LEVELS',
     route: '/game-dev',
     rotation: -8,
-    texture: '/assets/cartridges/textures/Gameroom_Scene_Export_v2_GBA_Pokemon_MTL_B.png',
-    labelImage: '/assets/cartridges/labels/pokemon.png',
+    texture: `${ASSET_ROOT}/cartridges/textures/Gameroom_Scene_Export_v2_GBA_Pokemon_MTL_B.png`,
+    labelImage: `${ASSET_ROOT}/cartridges/labels/pokemon.png`,
     shell: 'yellow',
   },
   {
@@ -26,8 +28,8 @@ const cartridges = [
     year: 'NEON',
     route: '/photography',
     rotation: 6,
-    texture: '/assets/cartridges/textures/Gameroom_Scene_Export_v2_GBA_Zelda_MTL_Bas.png',
-    labelImage: '/assets/cartridges/labels/zelda.png',
+    texture: `${ASSET_ROOT}/cartridges/textures/Gameroom_Scene_Export_v2_GBA_Zelda_MTL_Bas.png`,
+    labelImage: `${ASSET_ROOT}/cartridges/labels/zelda.png`,
     shell: 'green',
   },
   {
@@ -38,8 +40,8 @@ const cartridges = [
     year: 'POSTER',
     route: '/illustration',
     rotation: -2,
-    texture: '/assets/cartridges/textures/Gameroom_Scene_Export_v2_GBA_Kirby_MTL_Bas.png',
-    labelImage: '/assets/cartridges/labels/kirby.png',
+    texture: `${ASSET_ROOT}/cartridges/textures/Gameroom_Scene_Export_v2_GBA_Kirby_MTL_Bas.png`,
+    labelImage: `${ASSET_ROOT}/cartridges/labels/kirby.png`,
     shell: 'gray',
   },
 ];

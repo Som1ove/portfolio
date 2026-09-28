@@ -3,8 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
-const MODEL_URL = '/assets/gameboy-1989/source/Sketchfab%20Game%20Boy.fbx';
-const TEXTURE_ROOT = '/assets/gameboy-1989/textures/';
+const ASSET_ROOT = `${import.meta.env.BASE_URL}assets`;
+const MODEL_URL = `${ASSET_ROOT}/gameboy-1989/source/Sketchfab%20Game%20Boy.fbx`;
+const TEXTURE_ROOT = `${ASSET_ROOT}/gameboy-1989/textures/`;
 const HOME_ROTATION = { x: -0.15, y: 0.22 };
 const SCREEN_SIZE = { width: 640, height: 420 };
 const MODEL_FACE_ROTATION = { x: 0.06, y: -0.08, z: 0 };
